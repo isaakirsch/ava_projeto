@@ -1,0 +1,32 @@
+.stButton > button{
+    background-color: #0F006E;
+    color: white;
+}
+
+.stButton > button:hover{
+    background-color: #0e025b;
+    color: white;
+    border-color: #ffff !important;
+}
+
+.stButton > :active, button:focus {
+    background-color: #0e025b; 
+    color: white !important;  
+}
+
+#MainMenu{
+    visibility: hidden;
+}
+
+input {
+    background-color: #1D1454 !important; 
+    border: 2px solid white !important;    
+    color: white !important;              
+    border-radius: 10px;                 
+    padding: 10px;                        
+    font-size: 16px;                      
+}
+
+button[aria-label="toggle visibility"] svg {
+    color: white !important; 
+}
