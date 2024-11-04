@@ -13,12 +13,12 @@ from mysql.connector import Error
 
 def orb_sim(img1, img2):
     # Verifica o número de canais e converte para BGR se necessário
-    if len(img1.shape) == 2:  # Caso a imagem esteja em escala de cinza
+    if len(img1.shape) == 2: 
         gray1 = img1
     else:
         gray1 = cv2.cvtColor(img1, cv2.COLOR_BGR2GRAY)
         
-    if len(img2.shape) == 2:  # Caso a imagem esteja em escala de cinza
+    if len(img2.shape) == 2: 
         gray2 = img2
     else:
         gray2 = cv2.cvtColor(img2, cv2.COLOR_BGR2GRAY)
@@ -37,13 +37,13 @@ def orb_sim(img1, img2):
     matches = bf.match(des1, des2)
     matches = sorted(matches, key=lambda x: x.distance)
     
-    # Calcular a similaridade (por exemplo, média das distâncias dos melhores correspondências)
-    num_good_matches = 10  # Ajuste para o número desejado de correspondências
+    # Calcular a similaridade 
+    num_good_matches = 10 
     good_matches = matches[:num_good_matches]
     similarity = sum([match.distance for match in good_matches]) / num_good_matches
     
     # Normaliza a similaridade para um valor entre 0 e 1
-    max_distance = 255  # Distância máxima no espaço Hamming
+    max_distance = 255  
     similarity_normalized = 1 - (similarity / max_distance)
     
     return similarity_normalized
