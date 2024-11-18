@@ -314,10 +314,10 @@ def home_page():
 def conectar_bd():
     try:
         conexao = mysql.connector.connect(
-            host='localhost',
-            database='db_ava',
-            user='root',
-            password='nova_senha'
+            host='http://mysql.infocimol.com.br',
+            database='infocimol22',
+            user='infocimol22',
+            password='kirsch06'
         )
         return conexao
     except mysql.connector.Error as err:
