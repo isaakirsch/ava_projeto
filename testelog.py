@@ -314,10 +314,10 @@ def home_page():
 def conectar_bd():
     try:
         conexao = mysql.connector.connect(
-            host='dbava.c3s2ysmoum5c.us-east-2.rds.amazonaws.com', 
+            host='mysql.infocimol.com.br', 
             database='ava',
-            user='isadora',
-            password='kirsch06',
+            user='infocimol22',
+            password='infocimol22',
             port=3306 
         )
         return conexao
