@@ -142,7 +142,7 @@ def add_custom_css2():
     """, unsafe_allow_html=True)
 
 # Função para inserir os dados no banco de dados e retornar o código do usuário
-def usuario(nome_instituicao, telefone, rua, bairro, numero_edificio_, cep, cidade, senha):
+def usuario(nome_instituicao, telefone, rua, bairro, numero_edificio, cep, cidade, senha):
     conexao = conectar_bd()
     if conexao:
         cursor = conexao.cursor()
