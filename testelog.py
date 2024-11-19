@@ -226,7 +226,7 @@ def autenticar_usuario(nome_instituicao, senha):
         cursor = conexao.cursor()
         try:
             # Verifica se o usuário existe com a senha fornecida
-            cursor.execute("SELECT * FROM USUARIO WHERE nome_instituicao = %s AND senha = %s", (nome_instituicao, senha))
+            cursor.execute("SELECT * FROM usuario WHERE nome_instituicao = %s AND senha = %s", (nome_instituicao, senha))
             usuario = cursor.fetchone()
             return usuario is not None  # Retorna True se o usuário foi encontrado
         except mysql.connector.Error as err:
