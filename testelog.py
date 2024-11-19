@@ -147,9 +147,9 @@ def usuario(nome_instituicao, telefone, rua, bairro, numero_edificio_, cep, cida
     if conexao:
         cursor = conexao.cursor()
         try:
-            declaracao = """INSERT INTO usuario (nome_instituicao, telefone, rua, bairro, numero_edificio_, cep, cidade, senha) 
+            declaracao = """INSERT INTO usuario (nome_instituicao, telefone, rua, bairro, numero_edificio, cep, cidade, senha) 
                             VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"""
-            dados = (nome_instituicao, telefone, rua, bairro, numero_edificio_, cep, cidade, senha)
+            dados = (nome_instituicao, telefone, rua, bairro, numero_edificio, cep, cidade, senha)
             cursor.execute(declaracao, dados)
             conexao.commit()
             
