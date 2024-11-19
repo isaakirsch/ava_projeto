@@ -315,9 +315,9 @@ def conectar_bd():
     try:
         conexao = mysql.connector.connect(
             host='mysql.infocimol.com.br', 
-            database='ava',
+            database='infocimol22',
             user='infocimol22',
-            password='infocimol22',
+            password='kirsch06',
             port=3306 
         )
         return conexao
