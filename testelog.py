@@ -317,7 +317,7 @@ def conectar_bd():
             host='dbava.c3s2ysmoum5c.us-east-2.rds.amazonaws.com', 
             database='ava',
             user='isadora',
-            password='kirsch06',
+            password='@Kirsch10',
             port=3306 
         )
         return conexao
