@@ -314,9 +314,9 @@ def home_page():
 def conectar_bd():
     try:
         conexao = mysql.connector.connect(
-            host='mysql.infocimol.com.br', 
-            database='infocimol22',
-            user='infocimol22',
+            host='dbava.c3s2ysmoum5c.us-east-2.rds.amazonaws.com', 
+            database='ava',
+            user='isadora',
             password='kirsch06',
             port=3306 
         )
