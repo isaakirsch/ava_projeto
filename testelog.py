@@ -571,7 +571,6 @@ def registered_images_reference_page():
         st.write("Nenhuma imagem de referência encontrada.")
     st.button("Voltar", on_click=navigate, args=("home",))
 
-
 def add_custom_css8():
     st.markdown("""
 <style>
