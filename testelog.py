@@ -154,13 +154,24 @@ def register_page():
         cep = st.text_input("CEP")
         cidade = st.text_input("Cidade")
         telefone = st.text_input("Telefone")
-        password = st.text_input("Senha", type="password")
-        confirm_password = st.text_input("Confirme a senha", type="password")
+        
+        # Adiciona descrição sobre o limite da senha
+        st.write("A senha deve ter no máximo 6 caracteres.")
+        
+        # Captura e valida a senha enquanto o usuário digita
+        password = st.text_input("Senha", type="password", max_chars=6)
+        confirm_password = st.text_input("Confirme a senha", type="password", max_chars=6)
 
+        # Feedback em tempo real sobre o comprimento da senha
+        if password and len(password) > 6:
+            st.warning("A senha excedeu o limite de 6 caracteres.")
+        
         submit_button = st.form_submit_button(label="Cadastrar")
 
     if submit_button:
-        if password == confirm_password:
+        if len(password) > 6:
+            st.error("A senha deve ter no máximo 6 caracteres.")
+        elif password == confirm_password:
             # Realiza o cadastro e obtém o código do usuário
             codigo_usuario = USUARIO(institution_name, telefone, rua, bairro, numero, cep, cidade, password)
             if codigo_usuario is not None:
@@ -183,7 +194,6 @@ def register_page():
         else:
             st.error("As senhas não coincidem. Tente novamente.")
     st.button("Voltar", on_click=navigate, args=("welcome",))
-
 
 
 def add_custom_css3():
