@@ -258,7 +258,7 @@ def login_page():
 
 def add_custom_css4():
     st.markdown("""
-    <style>
+   <style>
         /* Estilização geral da página */
         body, html, [data-testid="stAppViewContainer"] {
             background-color: #050027;
@@ -298,6 +298,32 @@ def add_custom_css4():
             color: white;
             text-align: center;
         }
+
+        /* Estilização específica para o botão de download */
+        div.stDownloadButton > button {
+            background-color: #1D1454  !important;  /* Cor de fundo do botão de download */
+            border: 2px solid white !important;    /* Borda branca */
+            color: white !important;               /* Cor do texto */
+            border-radius: 12px !important;        /* Bordas arredondadas */
+            font-size: 18px !important;            /* Tamanho da fonte */
+            padding: 10px 20px !important;         /* Espaçamento interno */
+            margin-top: 10px !important;           /* Espaçamento superior */
+            width: 100% !important;                /* Largura dos botões */
+            box-shadow: none !important;           /* Remove a sombra padrão */
+        }
+
+        /* Remove a mudança de cor ao passar o mouse no botão de download */
+        div.stDownloadButton > button:hover {
+            background-color: #050027 !important;
+            color: white !important;
+        }
+
+        /* Remove a mudança de cor ao clicar no botão de download */
+        div.stDownloadButton > button:active, div.stDownloadButton > button:focus {
+            background-color: #050027 !important;
+            color: white !important;
+        }
+
     </style>
     """, unsafe_allow_html=True)
 def home_page():
