@@ -142,12 +142,12 @@ def add_custom_css2():
     """, unsafe_allow_html=True)
 
 # Função para inserir os dados no banco de dados e retornar o código do usuário
-def usuario(nome_instituicao, telefone, rua, bairro, numero_edificio, cep, cidade, senha):
+def USUARIO(nome_instituicao, telefone, rua, bairro, numero_edificio, cep, cidade, senha):
     conexao = conectar_bd()
     if conexao:
         cursor = conexao.cursor()
         try:
-            declaracao = """INSERT INTO usuario (nome_instituicao, telefone, rua, bairro, numero_edificio, cep, cidade, senha) 
+            declaracao = """INSERT INTO USUARIO (nome_instituicao, telefone, rua, bairro, numero_edificio, cep, cidade, senha) 
                             VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"""
             dados = (nome_instituicao, telefone, rua, bairro, numero_edificio, cep, cidade, senha)
             cursor.execute(declaracao, dados)
@@ -186,7 +186,7 @@ def register_page():
     if submit_button:
         if password == confirm_password:
             # Realiza o cadastro e obtém o código do usuário
-            codigo_usuario = usuario(institution_name, telefone, rua, bairro, numero, cep, cidade, password)
+            codigo_usuario = USUARIO(institution_name, telefone, rua, bairro, numero, cep, cidade, password)
             if codigo_usuario is not None:
                 st.success("Cadastro realizado com sucesso e salvo no banco de dados!")
 
@@ -226,7 +226,7 @@ def autenticar_usuario(nome_instituicao, senha):
         cursor = conexao.cursor()
         try:
             # Verifica se o usuário existe com a senha fornecida
-            cursor.execute("SELECT * FROM usuario WHERE nome_instituicao = %s AND senha = %s", (nome_instituicao, senha))
+            cursor.execute("SELECT * FROM USUARIO WHERE nome_instituicao = %s AND senha = %s", (nome_instituicao, senha))
             usuario = cursor.fetchone()
             return usuario is not None  # Retorna True se o usuário foi encontrado
         except mysql.connector.Error as err:
