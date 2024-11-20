@@ -398,11 +398,11 @@ def add_custom_css5():
 def upload_reference_page():
     add_custom_css5()
     st.markdown("# CADASTRAR IMAGEM DE REFERÊNCIA")
-  
+
+    # Inicializar sessão se necessário
+    initialize_session()
+
     # Captura os dados do usuário
-    st.session_state["cadastro"] = st.session_state.get("cadastro", {})
-    st.session_state["images_reference"] = st.session_state.get("images_reference", [])
-    
     st.session_state["cadastro"]["nome"] = st.text_input("Nome")
     st.session_state["cadastro"]["rua"] = st.text_input("Rua")
     st.session_state["cadastro"]["bairro"] = st.text_input("Bairro")
@@ -411,60 +411,62 @@ def upload_reference_page():
     st.session_state["cadastro"]["cidade"] = st.text_input("Cidade")
     st.session_state["cadastro"]["telefone"] = st.text_input("Telefone")
     st.session_state["cadastro"]["cpf"] = st.text_input("CPF")
-    
+
     uploaded_files = st.file_uploader("Faça upload das imagens de referência", accept_multiple_files=True)
-    
+
     if st.button("Cadastrar Imagens"):
         if not st.session_state["cadastro"]["nome"]:
             st.error("Por favor, insira o nome.")
         else:
-            conexao = conectar_bd()  
-            cursor = conexao.cursor()
+            try:
+                conexao = conectar_bd()  
+                cursor = conexao.cursor()
 
-            for uploaded_file in uploaded_files:
-                img_blob = uploaded_file.read()  
-                
-                # Verifica se a imagem não está vazia
-                if img_blob is None or len(img_blob) == 0:
-                    st.error("A imagem está vazia. Por favor, faça o upload de uma imagem válida.")
-                    continue  
+                for uploaded_file in uploaded_files:
+                    img_blob = uploaded_file.read()
 
-                st.session_state["images_reference"].append({
-                    "name": st.session_state["cadastro"]["nome"],
-                    "rua": st.session_state["cadastro"]["rua"],
-                    "bairro": st.session_state["cadastro"]["bairro"],
-                    "numero": st.session_state["cadastro"]["numero"],
-                    "cep": st.session_state["cadastro"]["cep"],
-                    "cidade": st.session_state["cadastro"]["cidade"],
-                    "telefone": st.session_state["cadastro"]["telefone"],
-                    "cpf": st.session_state["cadastro"]["cpf"],
-                    "file": img_blob
-                })
-                
-                # Inserir os dados na tabela PESSOA_TABELA_AUTORIZACAO
-                sql = """
-                    INSERT INTO PESSOA_TABELA_AUTORIZACAO (nome_pessoa, rua_pessoa, bairro_pessoa, numero_pessoa, cep_pessoa, cidade_pessoa, celular_pessoa, cpf_pessoa, imagem_tabela)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
-                """
-                values = (st.session_state["cadastro"]["nome"],
-                          st.session_state["cadastro"]["rua"],
-                          st.session_state["cadastro"]["bairro"],
-                          st.session_state["cadastro"]["numero"],
-                          st.session_state["cadastro"]["cep"],
-                          st.session_state["cadastro"]["cidade"],
-                          st.session_state["cadastro"]["telefone"],
-                          st.session_state["cadastro"]["cpf"],
-                          img_blob)  # Usar a imagem como BLOB
-                
-                cursor.execute(sql, values)
-            
-            conexao.commit()  # Confirmar a inserção no banco de dados
-            cursor.close()
-            conexao.close()
-            
-            st.success("Imagens cadastradas com sucesso!")
-            st.experimental_rerun()
-    st.button("Voltar", on_click=navigate, args=("home",))
+                    # Verifica se a imagem não está vazia
+                    if not img_blob:
+                        st.error("A imagem está vazia. Por favor, faça o upload de uma imagem válida.")
+                        continue
+
+                    st.session_state["images_reference"].append({
+                        "name": st.session_state["cadastro"]["nome"],
+                        "rua": st.session_state["cadastro"]["rua"],
+                        "bairro": st.session_state["cadastro"]["bairro"],
+                        "numero": st.session_state["cadastro"]["numero"],
+                        "cep": st.session_state["cadastro"]["cep"],
+                        "cidade": st.session_state["cadastro"]["cidade"],
+                        "telefone": st.session_state["cadastro"]["telefone"],
+                        "cpf": st.session_state["cadastro"]["cpf"],
+                        "file": img_blob
+                    })
+
+                    # Inserir no banco de dados
+                    sql = """
+                        INSERT INTO PESSOA_TABELA_AUTORIZACAO (nome_pessoa, rua_pessoa, bairro_pessoa, numero_pessoa, cep_pessoa, cidade_pessoa, celular_pessoa, cpf_pessoa, imagem_tabela)
+                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+                    """
+                    values = (st.session_state["cadastro"]["nome"],
+                              st.session_state["cadastro"]["rua"],
+                              st.session_state["cadastro"]["bairro"],
+                              st.session_state["cadastro"]["numero"],
+                              st.session_state["cadastro"]["cep"],
+                              st.session_state["cadastro"]["cidade"],
+                              st.session_state["cadastro"]["telefone"],
+                              st.session_state["cadastro"]["cpf"],
+                              img_blob)
+                    
+                    cursor.execute(sql, values)
+
+                conexao.commit()
+                cursor.close()
+                conexao.close()
+
+                st.success("Imagens cadastradas com sucesso!")
+                st.experimental_rerun()  # Reinicia o script após o sucesso
+            except Exception as e:
+                st.error(f"Erro ao salvar os dados: {str(e)}")
 
 
 def add_custom_css6():
