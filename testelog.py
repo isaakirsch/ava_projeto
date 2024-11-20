@@ -31,17 +31,23 @@ def load_image(uploaded_file):
 
 # Função para configurar a navegação
 def navigate(page):
+    """Atualiza a página atual no estado da sessão."""
     st.session_state["page"] = page
 
-# Inicializando o estado de sessão
-if "page" not in st.session_state:
-    st.session_state["page"] = "welcome"
-if "images_reference" not in st.session_state:
-    st.session_state["images_reference"] = []
-if "images_consent" not in st.session_state:
-    st.session_state["images_consent"] = []
-if "cadastro" not in st.session_state:
-    st.session_state["cadastro"] = {"completed": False}
+# Função para inicializar o estado de sessão
+def initialize_session_state():
+    """Inicializa as variáveis de sessão necessárias para o funcionamento do aplicativo."""
+    if "page" not in st.session_state:
+        st.session_state["page"] = "welcome"  # Página inicial padrão
+    if "images_reference" not in st.session_state:
+        st.session_state["images_reference"] = []  # Lista de imagens de referência
+    if "images_consent" not in st.session_state:
+        st.session_state["images_consent"] = []  # Lista de imagens com consentimento
+    if "cadastro" not in st.session_state:
+        st.session_state["cadastro"] = {"completed": False}  # Dados do cadastro
+
+# Inicializando o estado da sessão
+initialize_session_state()
 
 # Adicionar CSS para estilizar a aplicação
 with open("styles.css") as f:
