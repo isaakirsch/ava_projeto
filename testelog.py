@@ -329,6 +329,8 @@ def add_custom_css4():
 def home_page():
     add_custom_css4()
 
+       # Caminho do arquivo PDF
+    file_path = "tabela de assinaturas.pdf"
         # Botão de download para o arquivo PDF
     with open(file_path, "rb") as file:
         st.download_button(
@@ -346,17 +348,6 @@ def home_page():
     st.button("Perfil do Usuário", on_click=navigate, args=("user_profile",))
     st.button("Voltar", on_click=navigate, args=("welcome",))
 
-    # Caminho do arquivo PDF
-    file_path = "tabela de assinaturas.pdf"
-    
-    # Botão de download para o arquivo PDF
-    with open(file_path, "rb") as file:
-        st.download_button(
-            label="Baixar Tabela de Assinaturas",  
-            data=file,  
-            file_name="tabela de assinaturas.pdf",  
-            mime="application/pdf"  
-        )
     
 
 # Função para conexão com o banco
