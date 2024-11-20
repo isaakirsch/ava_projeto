@@ -347,7 +347,7 @@ def home_page():
             file_name="tabela de assinaturas.pdf",  
             mime="application/pdf"  
         )
-    st.button("Voltar", on_click=navigate, args=("welcome",))
+    st.button("Voltar", on_click=navigate, args=("welcome",), key="voltar_home")
 
 # Função para conexão com o banco
 def conectar_bd():
