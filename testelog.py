@@ -12,41 +12,17 @@ import mysql.connector
 from mysql.connector import Error
 
 def orb_sim(img1, img2):
-    # Verifica o número de canais e converte para BGR se necessário
-    if len(img1.shape) == 2: 
-        gray1 = img1
-    else:
-        gray1 = cv2.cvtColor(img1, cv2.COLOR_BGR2GRAY)
-        
-    if len(img2.shape) == 2: 
-        gray2 = img2
-    else:
-        gray2 = cv2.cvtColor(img2, cv2.COLOR_BGR2GRAY)
-
-    # ORB detector
     orb = cv2.ORB_create()
-    kp1, des1 = orb.detectAndCompute(gray1, None)
-    kp2, des2 = orb.detectAndCompute(gray2, None)
-
-    # Verifica se há descritores válidos
-    if des1 is None or des2 is None:
+    kp_a, desc_a = orb.detectAndCompute(img1, None)
+    kp_b, desc_b = orb.detectAndCompute(img2, None)
+    if desc_a is None or desc_b is None:
         return None
-
-    # Matcher
     bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
-    matches = bf.match(des1, des2)
-    matches = sorted(matches, key=lambda x: x.distance)
-    
-    # Calcular a similaridade 
-    num_good_matches = 10 
-    good_matches = matches[:num_good_matches]
-    similarity = sum([match.distance for match in good_matches]) / num_good_matches
-    
-    # Normaliza a similaridade para um valor entre 0 e 1
-    max_distance = 255  
-    similarity_normalized = 1 - (similarity / max_distance)
-    
-    return similarity_normalized
+    matches = bf.match(desc_a, desc_b)
+    similar_regions = [i for i in matches if i.distance < 50]
+    if len(matches) == 0:
+        return 0
+    return len(similar_regions) / len(matches)
 
 # Função para carregar uma imagem a partir de um arquivo
 def load_image(uploaded_file):
