@@ -328,6 +328,16 @@ def add_custom_css4():
     """, unsafe_allow_html=True)
 def home_page():
     add_custom_css4()
+
+        # Botão de download para o arquivo PDF
+    with open(file_path, "rb") as file:
+        st.download_button(
+            label="Baixar Tabela de Assinaturas",  
+            data=file,  
+            file_name="tabela de assinaturas.pdf",  
+            mime="application/pdf"  
+        )
+    
     st.button("Adicionar imagem de referência", on_click=navigate, args=("upload_reference",))
     st.button("Adicionar imagem de termo de consentimento", on_click=navigate, args=("upload_consent",))
     st.button("Adicionar imagem para verificação", on_click=navigate, args=("upload_verification",))
@@ -347,7 +357,7 @@ def home_page():
             file_name="tabela de assinaturas.pdf",  
             mime="application/pdf"  
         )
-    st.button("Voltar", on_click=navigate, args=("welcome",), key="voltar_home")
+    
 
 # Função para conexão com o banco
 def conectar_bd():
