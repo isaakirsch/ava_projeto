@@ -31,23 +31,17 @@ def load_image(uploaded_file):
 
 # Função para configurar a navegação
 def navigate(page):
-    """Atualiza a página atual no estado da sessão."""
     st.session_state["page"] = page
 
-# Função para inicializar o estado de sessão
-def initialize_session_state():
-    """Inicializa as variáveis de sessão necessárias para o funcionamento do aplicativo."""
-    if "page" not in st.session_state:
-        st.session_state["page"] = "welcome"  # Página inicial padrão
-    if "images_reference" not in st.session_state:
-        st.session_state["images_reference"] = []  # Lista de imagens de referência
-    if "images_consent" not in st.session_state:
-        st.session_state["images_consent"] = []  # Lista de imagens com consentimento
-    if "cadastro" not in st.session_state:
-        st.session_state["cadastro"] = {"completed": False}  # Dados do cadastro
-
-# Inicializando o estado da sessão
-initialize_session_state()
+# Inicializando o estado de sessão
+if "page" not in st.session_state:
+    st.session_state["page"] = "welcome"
+if "images_reference" not in st.session_state:
+    st.session_state["images_reference"] = []
+if "images_consent" not in st.session_state:
+    st.session_state["images_consent"] = []
+if "cadastro" not in st.session_state:
+    st.session_state["cadastro"] = {"completed": False}
 
 # Adicionar CSS para estilizar a aplicação
 with open("styles.css") as f:
@@ -404,10 +398,7 @@ def add_custom_css5():
 def upload_reference_page():
     add_custom_css5()
     st.markdown("# CADASTRAR IMAGEM DE REFERÊNCIA")
-
-    # Inicializar sessão se necessário
-    initialize_session()
-
+  
     # Captura os dados do usuário
     st.session_state["cadastro"]["nome"] = st.text_input("Nome")
     st.session_state["cadastro"]["rua"] = st.text_input("Rua")
@@ -417,62 +408,60 @@ def upload_reference_page():
     st.session_state["cadastro"]["cidade"] = st.text_input("Cidade")
     st.session_state["cadastro"]["telefone"] = st.text_input("Telefone")
     st.session_state["cadastro"]["cpf"] = st.text_input("CPF")
-
+    
     uploaded_files = st.file_uploader("Faça upload das imagens de referência", accept_multiple_files=True)
-
+    
     if st.button("Cadastrar Imagens"):
         if not st.session_state["cadastro"]["nome"]:
             st.error("Por favor, insira o nome.")
         else:
-            try:
-                conexao = conectar_bd()  
-                cursor = conexao.cursor()
+            conexao = conectar_bd()  
+            cursor = conexao.cursor()
 
-                for uploaded_file in uploaded_files:
-                    img_blob = uploaded_file.read()
+            for uploaded_file in uploaded_files:
+                img_blob = uploaded_file.read()  
+                
+                # Verifica se a imagem não está vazia
+                if img_blob is None or len(img_blob) == 0:
+                    st.error("A imagem está vazia. Por favor, faça o upload de uma imagem válida.")
+                    continue  
 
-                    # Verifica se a imagem não está vazia
-                    if not img_blob:
-                        st.error("A imagem está vazia. Por favor, faça o upload de uma imagem válida.")
-                        continue
-
-                    st.session_state["images_reference"].append({
-                        "name": st.session_state["cadastro"]["nome"],
-                        "rua": st.session_state["cadastro"]["rua"],
-                        "bairro": st.session_state["cadastro"]["bairro"],
-                        "numero": st.session_state["cadastro"]["numero"],
-                        "cep": st.session_state["cadastro"]["cep"],
-                        "cidade": st.session_state["cadastro"]["cidade"],
-                        "telefone": st.session_state["cadastro"]["telefone"],
-                        "cpf": st.session_state["cadastro"]["cpf"],
-                        "file": img_blob
-                    })
-
-                    # Inserir no banco de dados
-                    sql = """
-                        INSERT INTO PESSOA_TABELA_AUTORIZACAO (nome_pessoa, rua_pessoa, bairro_pessoa, numero_pessoa, cep_pessoa, cidade_pessoa, celular_pessoa, cpf_pessoa, imagem_tabela)
-                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
-                    """
-                    values = (st.session_state["cadastro"]["nome"],
-                              st.session_state["cadastro"]["rua"],
-                              st.session_state["cadastro"]["bairro"],
-                              st.session_state["cadastro"]["numero"],
-                              st.session_state["cadastro"]["cep"],
-                              st.session_state["cadastro"]["cidade"],
-                              st.session_state["cadastro"]["telefone"],
-                              st.session_state["cadastro"]["cpf"],
-                              img_blob)
-                    
-                    cursor.execute(sql, values)
-
-                conexao.commit()
-                cursor.close()
-                conexao.close()
-
-                st.success("Imagens cadastradas com sucesso!")
-                st.experimental_rerun()  # Reinicia o script após o sucesso
-            except Exception as e:
-                st.error(f"Erro ao salvar os dados: {str(e)}")
+                st.session_state["images_reference"].append({
+                    "name": st.session_state["cadastro"]["nome"],
+                    "rua": st.session_state["cadastro"]["rua"],
+                    "bairro": st.session_state["cadastro"]["bairro"],
+                    "numero": st.session_state["cadastro"]["numero"],
+                    "cep": st.session_state["cadastro"]["cep"],
+                    "cidade": st.session_state["cadastro"]["cidade"],
+                    "telefone": st.session_state["cadastro"]["telefone"],
+                    "cpf": st.session_state["cadastro"]["cpf"],
+                    "file": img_blob
+                })
+                
+                # Inserir os dados na tabela PESSOA_TABELA_AUTORIZACAO
+                sql = """
+                    INSERT INTO PESSOA_TABELA_AUTORIZACAO (nome_pessoa, rua_pessoa, bairro_pessoa, numero_pessoa, cep_pessoa, cidade_pessoa, celular_pessoa, cpf_pessoa, imagem_tabela)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+                """
+                values = (st.session_state["cadastro"]["nome"],
+                          st.session_state["cadastro"]["rua"],
+                          st.session_state["cadastro"]["bairro"],
+                          st.session_state["cadastro"]["numero"],
+                          st.session_state["cadastro"]["cep"],
+                          st.session_state["cadastro"]["cidade"],
+                          st.session_state["cadastro"]["telefone"],
+                          st.session_state["cadastro"]["cpf"],
+                          img_blob)  # Usar a imagem como BLOB
+                
+                cursor.execute(sql, values)
+            
+            conexao.commit()  # Confirmar a inserção no banco de dados
+            cursor.close()
+            conexao.close()
+            
+            st.success("Imagens cadastradas com sucesso!")
+            st.rerun()
+    st.button("Voltar", on_click=navigate, args=("home",))
 
 
 def add_custom_css6():
@@ -554,7 +543,6 @@ def registered_images_reference_page():
     add_custom_css7()
     st.markdown("# IMAGENS DE REFERÊNCIA CADASTRADAS")
     
-    # Filtrar imagens com base no termo pesquisado
     search_query = st.text_input("Pesquise aqui...")
     filtered_images = [img for img in st.session_state["images_reference"] if search_query.lower() in img["name"].lower()]
     
@@ -583,10 +571,12 @@ def registered_images_reference_page():
                         if delete_image(st.session_state["images_reference"], img["name"]):
                             st.success(f"Imagem '{img['name']}' excluída com sucesso!")
                             st.session_state[confirm_key] = False  # Resetar o estado de confirmação
+                            st.session_state["images_reference"].remove(img)  # Remover a imagem da lista
                             st.experimental_rerun()  # Recarregar a página para refletir as mudanças
                 with col2:
                     if st.button("Não", key=f"cancel_{img['name']}"):
                         st.session_state[confirm_key] = False  # Resetar o estado de confirmação
+
     else:
         st.write("Nenhuma imagem de referência encontrada.")
     st.button("Voltar", on_click=navigate, args=("home",))
