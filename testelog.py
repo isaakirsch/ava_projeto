@@ -400,6 +400,9 @@ def upload_reference_page():
     st.markdown("# CADASTRAR IMAGEM DE REFERÊNCIA")
   
     # Captura os dados do usuário
+    st.session_state["cadastro"] = st.session_state.get("cadastro", {})
+    st.session_state["images_reference"] = st.session_state.get("images_reference", [])
+    
     st.session_state["cadastro"]["nome"] = st.text_input("Nome")
     st.session_state["cadastro"]["rua"] = st.text_input("Rua")
     st.session_state["cadastro"]["bairro"] = st.text_input("Bairro")
@@ -460,7 +463,7 @@ def upload_reference_page():
             conexao.close()
             
             st.success("Imagens cadastradas com sucesso!")
-            st.rerun()
+            st.experimental_rerun()
     st.button("Voltar", on_click=navigate, args=("home",))
 
 
@@ -543,6 +546,7 @@ def registered_images_reference_page():
     add_custom_css7()
     st.markdown("# IMAGENS DE REFERÊNCIA CADASTRADAS")
     
+    # Filtrar imagens com base no termo pesquisado
     search_query = st.text_input("Pesquise aqui...")
     filtered_images = [img for img in st.session_state["images_reference"] if search_query.lower() in img["name"].lower()]
     
@@ -571,12 +575,10 @@ def registered_images_reference_page():
                         if delete_image(st.session_state["images_reference"], img["name"]):
                             st.success(f"Imagem '{img['name']}' excluída com sucesso!")
                             st.session_state[confirm_key] = False  # Resetar o estado de confirmação
-                            st.session_state["images_reference"].remove(img)  # Remover a imagem da lista
                             st.experimental_rerun()  # Recarregar a página para refletir as mudanças
                 with col2:
                     if st.button("Não", key=f"cancel_{img['name']}"):
                         st.session_state[confirm_key] = False  # Resetar o estado de confirmação
-
     else:
         st.write("Nenhuma imagem de referência encontrada.")
     st.button("Voltar", on_click=navigate, args=("home",))
