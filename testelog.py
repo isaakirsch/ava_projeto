@@ -561,22 +561,23 @@ def registered_images_reference_page():
             if not st.session_state[confirm_key]:
                 if st.button(f"Excluir {img['name']}", key=f"delete_{img['name']}"):
                     st.session_state[confirm_key] = True
-           else:
-    # Mensagem de confirmação
-    st.warning(f"Tem certeza que deseja excluir a imagem '{img['name']}'?")
-    col1, col2 = st.columns(2)
-    with col1:
-        if st.button("Sim", key=f"confirm_{img['name']}"):
-            # Lógica de exclusão
-            if delete_image(st.session_state["images_reference"], img["name"]):
-                st.success(f"Imagem '{img['name']}' excluída com sucesso!")
-                st.session_state[confirm_key] = False  # Resetar o estado de confirmação
-                if img in st.session_state["images_reference"]:  # Verifique se a imagem está na lista antes de removê-la
-                    st.session_state["images_reference"].remove(img)  # Remover a imagem da lista
-                st.experimental_rerun()  # Recarregar a página para refletir as mudanças
-    with col2:
-        if st.button("Não", key=f"cancel_{img['name']}"):
-            st.session_state[confirm_key] = False  # Resetar o estado de confirmação
+            else:
+                # Mensagem de confirmação
+                st.warning(f"Tem certeza que deseja excluir a imagem '{img['name']}'?")
+                col1, col2 = st.columns(2)
+                with col1:
+                    if st.button("Sim", key=f"confirm_{img['name']}"):
+                        if img in st.session_state["images_reference"]:
+                            st.session_state["images_reference"].remove(img)
+                        # Lógica de exclusão
+                        if delete_image(st.session_state["images_reference"], img["name"]):
+                            st.success(f"Imagem '{img['name']}' excluída com sucesso!")
+                            st.session_state[confirm_key] = False  # Resetar o estado de confirmação
+                            st.session_state["images_reference"].remove(img)  # Remover a imagem da lista
+                            st.experimental_rerun()  # Recarregar a página para refletir as mudanças
+                with col2:
+                    if st.button("Não", key=f"cancel_{img['name']}"):
+                        st.session_state[confirm_key] = False  # Resetar o estado de confirmação
 
     else:
         st.write("Nenhuma imagem de referência encontrada.")
