@@ -705,18 +705,17 @@ def user_profile_page():
                     st.warning("O código do usuário não foi encontrado na sessão. Por favor, tente cadastrar novamente.")
                     return
 
-                # Substitua 'usuario' pelo nome correto da tabela
-                cursor.execute("SELECT nome_instituicao, rua, bairro, numero_edificio_, cep, cidade, telefone FROM usuario WHERE codigo_usuario = %s", (codigo_usuario,))
+                cursor.execute("SELECT nome_instituicao, rua, bairro, numero_edificio, cep, cidade, telefone FROM USUARIO WHERE codigo_usuario = %s", (codigo_usuario,))
                 user_data = cursor.fetchone()
                 
                 if user_data:
                     # Atribui os dados a variáveis
-                    nome_instituicao, rua, bairro, numero_edificio_, cep, cidade, telefone = user_data
+                    nome_instituicao, rua, bairro, numero_edificio, cep, cidade, telefone = user_data
                     # Exibe os dados
                     st.write(f"**Nome da instituição**: {nome_instituicao}")
                     st.write(f"**Rua**: {rua}")
                     st.write(f"**Bairro**: {bairro}")
-                    st.write(f"**Número**: {numero_edificio_}")
+                    st.write(f"**Número**: {numero_edificio}")
                     st.write(f"**CEP**: {cep}")
                     st.write(f"**Cidade**: {cidade}")
                     st.write(f"**Telefone**: {telefone}")
