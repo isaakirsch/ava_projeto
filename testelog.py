@@ -533,10 +533,6 @@ def registered_images_reference_page():
     add_custom_css7()
         st.markdown("# IMAGENS DE REFERÊNCIA CADASTRADAS")
     
-    # Carrega imagens do banco de dados, se a lista estiver vazia
-    if not st.session_state["images_reference"]:
-        load_images_from_db()
-    
     search_query = st.text_input("Pesquise aqui...")
     filtered_images = [img for img in st.session_state["images_reference"] if search_query.lower() in img["name"].lower()]
     
@@ -544,27 +540,33 @@ def registered_images_reference_page():
         for img in filtered_images:
             st.image(img["file"], caption=img["name"])
 
+            # Chave única para controle de confirmação de exclusão
             confirm_key = f"confirm_delete_{img['name']}"
 
+            # Inicializa o estado da confirmação se não existir
             if confirm_key not in st.session_state:
                 st.session_state[confirm_key] = False
 
+            # Exibe botão para excluir
             if not st.session_state[confirm_key]:
                 if st.button(f"Excluir {img['name']}", key=f"delete_{img['name']}"):
                     st.session_state[confirm_key] = True
             else:
+                # Mensagem de confirmação
                 st.warning(f"Tem certeza que deseja excluir a imagem '{img['name']}'?")
                 col1, col2 = st.columns(2)
                 with col1:
                     if st.button("Sim", key=f"confirm_{img['name']}"):
+                        # Lógica de exclusão
                         if delete_image(st.session_state["images_reference"], img["name"]):
                             st.success(f"Imagem '{img['name']}' excluída com sucesso!")
-                            st.session_state[confirm_key] = False
-                            st.session_state["images_reference"].remove(img)
-                            st.experimental_rerun()
+                            st.session_state[confirm_key] = False  # Resetar o estado de confirmação
+                            st.session_state["images_reference"].remove(img)  # Remover a imagem da lista
+                            st.experimental_rerun()  # Recarregar a página para refletir as mudanças
                 with col2:
                     if st.button("Não", key=f"cancel_{img['name']}"):
-                        st.session_state[confirm_key] = False
+                        st.session_state[confirm_key] = False  # Resetar o estado de confirmação
+
     else:
         st.write("Nenhuma imagem de referência encontrada.")
     st.button("Voltar", on_click=navigate, args=("home",))
