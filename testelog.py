@@ -531,7 +531,7 @@ def add_custom_css7():
 # Página de imagens cadastradas de referência
 def registered_images_reference_page():
     add_custom_css7()
-        st.markdown("# IMAGENS DE REFERÊNCIA CADASTRADAS")
+    st.markdown("# IMAGENS DE REFERÊNCIA CADASTRADAS")
     
     search_query = st.text_input("Pesquise aqui...")
     filtered_images = [img for img in st.session_state["images_reference"] if search_query.lower() in img["name"].lower()]
